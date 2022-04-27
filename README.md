@@ -1,4 +1,4 @@
 QmlVideoProducer
 ================
 
-demo project for habrahabr.ru
+demo project
