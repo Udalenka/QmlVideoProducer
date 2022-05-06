@@ -19,10 +19,11 @@ VideoProducer::VideoProducer( QObject *parent )
 
     connect(probe, SIGNAL(videoFrameProbed(QVideoFrame)), this, SLOT(onNewVideoContentReceived(QVideoFrame)));
 
-    probe->setSource(player); // Returns true, hopefully.
+    probe->setSource(player);
     player->setVideoOutput(videoSurface());
-    player->setMedia(QUrl::fromLocalFile("../QmlVideoProducer/ship.mp4"));
-    player->play(); // Start receiving frames as they get presented to myVideoSurface
+    player->setMedia(QUrl::fromLocalFile("/home/sergey/projects/QmlVideoProducer/ship.mp4"));
+    player->play();
+    player->setVolume(0);
 }
 
 VideoProducer::~VideoProducer()
@@ -43,6 +44,12 @@ void VideoProducer::setVideoSurface( QAbstractVideoSurface* s )
 
 void VideoProducer::onNewVideoContentReceived(const QVideoFrame &frame)
 {
+    static int nFrame = 0;
+    nFrame++;
+    qDebug() << "frame № " << nFrame;
+    if (nFrame == 50)
+        setAudioSource("file:///home/sergey/projects/QmlVideoProducer/ResetOSTSchool.mp3");
+
     QVideoFrame::PixelFormat pixelFormat = frame.pixelFormat();
     if (pixelFormat != _format.pixelFormat())
     {
@@ -59,4 +66,17 @@ void VideoProducer::closeSurface()
 {
     if( _surface && _surface->isActive() )
         _surface->stop();
+}
+
+const QString &VideoProducer::audioSource() const
+{
+    return _audioSource;
+}
+
+void VideoProducer::setAudioSource(const QString &newAudioSource)
+{
+    if (_audioSource == newAudioSource)
+        return;
+    _audioSource = newAudioSource;
+    emit audioSourceChanged();
 }

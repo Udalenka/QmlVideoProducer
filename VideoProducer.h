@@ -13,12 +13,19 @@ public:
     ~VideoProducer();
 
     Q_PROPERTY( QAbstractVideoSurface* videoSurface READ videoSurface WRITE setVideoSurface )
+    Q_PROPERTY(QString audioSource READ audioSource WRITE setAudioSource NOTIFY audioSourceChanged)
 
     QAbstractVideoSurface* videoSurface() const;
     void setVideoSurface( QAbstractVideoSurface* s );
 
+    const QString &audioSource() const;
+    void setAudioSource(const QString &newAudioSource);
+
 public slots:
     void onNewVideoContentReceived(const QVideoFrame &frame);
+
+signals:
+    void audioSourceChanged();
 
 private:
     void closeSurface();
@@ -26,4 +33,5 @@ private:
 private:
     QAbstractVideoSurface* _surface;
     QVideoSurfaceFormat _format;
+    QString _audioSource;
 };

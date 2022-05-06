@@ -16,4 +16,11 @@ Window {
         anchors.fill: parent;
         source: videoProducer;
     }
+
+    Audio {
+        id: audio
+        autoPlay: true
+        source: videoProducer.audioSource
+        volume: 1.0
+    }
 }
